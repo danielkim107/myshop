@@ -1,3 +1,7 @@
+import { AdminAuthGuard } from './admin-auth-guard.service';
+import { UserService } from './user.service';
+import { AuthGuard } from './auth-guard.service';
+import { AuthService } from './auth.service';
 import { LoginComponent } from './login/login.component';
 import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
@@ -44,15 +48,22 @@ import { AdminProductsComponent } from './admin/admin-products/admin-products.co
 		{ path: '', component: HomeComponent },
 		{ path: 'products', component: ProductsComponent },
 		{ path: 'shopping-cart', component: ShoppingCartComponent },
-		{ path: 'checkout', component: CheckoutComponent },
-		{ path: 'order-sucess', component: OrderSuccessComponent },
-		{ path: 'my/orders', component: MyOrdersComponent },
 		{ path: 'login', component: LoginComponent },
-		{ path: 'admin/products', component: AdminProductsComponent },
-		{ path: 'admin/orders', component: AdminOrdersComponent }
+
+		{ path: 'checkout', component: CheckoutComponent, canActivate: [AuthGuard] },
+		{ path: 'order-sucess', component: OrderSuccessComponent, canActivate: [AuthGuard] },
+		{ path: 'my/orders', component: MyOrdersComponent, canActivate: [AuthGuard] },
+
+		{ path: 'admin/products', component: AdminProductsComponent, canActivate: [AuthGuard, AdminAuthGuard] },
+		{ path: 'admin/orders', component: AdminOrdersComponent, canActivate: [AuthGuard, AdminAuthGuard] },
 	])
   ],
-  providers: [],
+  providers: [
+	  AuthService,
+	  AuthGuard,
+	  UserService,
+	  AdminAuthGuard
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
